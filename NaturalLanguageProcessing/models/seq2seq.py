@@ -28,7 +28,7 @@ class seq2seq(nn.Module):
             self.criterion = models.criterion_emb(config.hidden_size, tgt_vocab_size, use_cuda)
         else:
             self.criterion = models.criterion(tgt_vocab_size, use_cuda)
-        self.log_softmax = nn.LogSoftmax()
+        self.log_softmax = nn.LogSoftmax(dim=1)
 
     def compute_loss(self, hidden_outputs, targets, loss_fn, updates):
         if loss_fn == 'memory':

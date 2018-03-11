@@ -4,6 +4,7 @@ import models
 import data.dict as dict
 from torch.autograd import Variable
 from torch.nn.parameter import Parameter
+#import torch.nn.functional as F
 
 def criterion(tgt_vocab_size, use_cuda):
     weight = torch.ones(tgt_vocab_size)
@@ -127,11 +128,15 @@ def memory_efficiency_cross_entropy_loss(hidden_outputs, decoder, targets, crite
 def cross_entropy_loss(hidden_outputs, decoder, targets, criterion, config, sim_score=0):
     outputs = hidden_outputs.view(-1, hidden_outputs.size(2))
     scores = decoder.compute_score(outputs)
-    loss = criterion(scores, targets.view(-1)) + sim_score
+
     pred = scores.max(1)[1]
-    num_correct = pred.data.eq(targets.data).masked_select(targets.ne(dict.PAD).data).sum()
-    num_total = targets.ne(dict.PAD).data.sum()
-    loss.div(num_total).backward()
+    tgt_view = targets.view(-1).data; tgt_mask =tgt_view.ne(dict.PAD)
+    num_correct = pred.data.eq(tgt_view).masked_select(tgt_mask).sum()
+    num_total = tgt_mask.sum()
+
+    loss_base = criterion(scores, targets.view(-1)).div(num_total)
+    loss = loss_base
+    loss.backward()
     loss = loss.data[0]
 
     return loss, num_total, num_correct, config.tgt_vocab, config.tgt_vocab

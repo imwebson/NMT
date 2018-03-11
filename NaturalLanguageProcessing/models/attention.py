@@ -4,6 +4,7 @@ from torch.autograd import Variable
 from torch.nn.utils.rnn import pack_padded_sequence as pack
 from torch.nn.utils.rnn import pad_packed_sequence as unpack
 import data.dict as dict
+#import torch.nn.functional as F
 
 class global_attention(nn.Module):
 
@@ -11,7 +12,7 @@ class global_attention(nn.Module):
         super(global_attention, self).__init__()
         self.linear_in = nn.Linear(hidden_size, hidden_size)
         self.linear_out = nn.Linear(2*hidden_size, hidden_size)
-        self.softmax = nn.Softmax()
+        self.softmax = nn.Softmax(dim=1)
         self.tanh = nn.Tanh()
         self.activation = activation
 
