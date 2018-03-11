@@ -36,7 +36,7 @@ class seq2seq(nn.Module):
         elif loss_fn == 'emb':
             return models.prior_knowledge_loss(hidden_outputs, self.decoder, targets, self.criterion, self.config, updates)
         else:
-            return models.cross_entropy_loss(hidden_outputs, self.decoder, targets, self.criterion, self.config)
+            return models.cross_entropy_loss(hidden_outputs, self.decoder, targets, self.criterion, self.config, updates)
 
     def forward(self, src, src_len, tgt, tgt_len):
         lengths, indices = torch.sort(src_len.squeeze(0), dim=0, descending=True)

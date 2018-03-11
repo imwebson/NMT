@@ -125,7 +125,7 @@ def memory_efficiency_cross_entropy_loss(hidden_outputs, decoder, targets, crite
     return loss, num_total, num_correct, config.tgt_vocab, config.tgt_vocab
 
 
-def cross_entropy_loss(hidden_outputs, decoder, targets, criterion, config, sim_score=0):
+def cross_entropy_loss(hidden_outputs, decoder, targets, criterion, config, updates, sim_score=0):
     outputs = hidden_outputs.view(-1, hidden_outputs.size(2))
     scores = decoder.compute_score(outputs)
 
